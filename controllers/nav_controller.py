@@ -17,8 +17,9 @@ class NavigationController(BaseController):
         self.slowing_down_distance = 0.4  # when to start slowing down (meters)
         self.yaw_threshold = np.deg2rad(5)  # yaw error threshold (radians)
         self.yaw_threshold_upper = np.deg2rad(8)
-        self.position_threshold = 0.05  # position error threshold (meters)
-        self.min_speed = 0.005  # minimum linear speed (m/s)
+        self.position_threshold = 0.04  # position error threshold (meters)
+        self.min_speed = 0.2  # minimum linear speed (m/s)
+        self.min_yaw_rate = np.deg2rad(20)
         self.state = "ROTATE_TO_TARGET_DIRECTION"
         return
 
@@ -61,7 +62,10 @@ class NavigationController(BaseController):
             omega = np.clip(yaw_diff / step_size, -self.max_yaw_rate, self.max_yaw_rate)
             v = 0.0  # No linear motion during rotation
 
-            # Check if the robot is facing the target direction
+            if abs(omega) < self.min_yaw_rate and abs(yaw_diff) > self.yaw_threshold:
+                omega = self.min_yaw_rate * np.sign(omega)
+                print(omega)
+
             if abs(yaw_diff) <= self.yaw_threshold:
                 self.state = "MOVE_FORWARD"
 
@@ -89,7 +93,10 @@ class NavigationController(BaseController):
                 omega = np.clip(yaw_diff / step_size, -self.max_yaw_rate, self.max_yaw_rate)
                 v = 0.0  # No linear motion during rotation
 
-                # Check if the robot has reached the target orientation
+                if abs(omega) < self.min_yaw_rate and abs(yaw_diff) > self.yaw_threshold:
+                    omega = self.min_yaw_rate * np.sign(omega)
+                    print(omega)
+
                 if abs(yaw_diff) <= self.yaw_threshold:
                     self.state = "DONE"
             else:

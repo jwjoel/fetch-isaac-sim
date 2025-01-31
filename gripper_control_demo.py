@@ -16,7 +16,7 @@ parser.add_argument("--test", default=False, action="store_true", help="Run in t
 args, unknown = parser.parse_known_args()
 
 my_world = World(stage_units_in_meters=1.0)
-assets_root_path = '/home/joel/.local/share/ov/pkg/isaac-sim-4.1.0/projects/tabletop_rearrangement/assets'
+assets_root_path = '/home/joel/Development/Research/fetch-issac-sim/assets'
 asset_path = assets_root_path + "/fetch/fetch_new.usd"
 add_reference_to_stage(usd_path=asset_path, prim_path="/World")
 

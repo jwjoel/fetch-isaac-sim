@@ -30,7 +30,7 @@ class PickPlace(PickPlaceBase):
         return
     
     def set_robot(self) -> SingleManipulator:
-        assets_root_path = '/home/joel/.local/share/ov/pkg/isaac-sim-4.1.0/projects/tabletop_rearrangement/assets'
+        assets_root_path = '/home/joel/Development/Research/fetch-issac-sim/assets'
         asset_path = assets_root_path + "/fetch/fetch_new.usd"
         add_reference_to_stage(usd_path=asset_path, prim_path="/World")
         gripper = ParallelGripper(

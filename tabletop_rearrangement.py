@@ -169,7 +169,7 @@ def create_navagation_controller():
     return NavigationController()
 
 def create_scene(world):
-    usd_path = "/home/joel/.local/share/ov/pkg/isaac-sim-4.1.0/projects/tabletop_rearrangement/assets/table_original.usdz"
+    usd_path = "./assets/table_original.usdz"
     add_reference_to_stage(usd_path=usd_path, prim_path="/World/table")
     scale_factor = 1.2
     world.scene.add(XFormPrim(
@@ -181,7 +181,7 @@ def create_scene(world):
     ))
     configure_object_physics("/World/table", True, True)
     
-    scene_path = "/home/joel/.local/share/ov/pkg/isaac-sim-4.1.0/projects/tabletop_rearrangement/assets/scene.usd"
+    scene_path = "./assets/scene.usd"
     add_reference_to_stage(usd_path=scene_path, prim_path="/World/scene")
     world.scene.add(XFormPrim(
         prim_path="/World/scene",
@@ -367,8 +367,9 @@ def main_loop(simulation_app, world, nav_controller, articulation_controller, ar
                 articulation_controller.apply_action(actions)
                 current_yaw = quat_to_euler_angles(current_orientation)[2]
                 distance_to_target = np.linalg.norm(target_position - current_position[:2])
-
-                if distance_to_target < nav_controller.position_threshold + 0.02:
+                is_position_matched = False
+                if is_position_matched or distance_to_target < nav_controller.position_threshold + 0.05:
+                    is_position_matched = True
                     print("Position Matched")
                     if target_orientation is None or abs(current_yaw - target_orientation) <= nav_controller.yaw_threshold:
                         nav_controller.target_set = False
@@ -380,6 +381,7 @@ def main_loop(simulation_app, world, nav_controller, articulation_controller, ar
                         print(abs(current_yaw - target_orientation))
                 else:
                     print(distance_to_target)
+                is_position_matched = False
             else:
                 pass
             if args.test:
