@@ -1,1 +1,1 @@
-# fetch-issac-sim
+# Fetch Robot integration for Isaac Sim
